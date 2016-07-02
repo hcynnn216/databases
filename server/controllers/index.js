@@ -4,17 +4,14 @@ module.exports = {
   messages: {
     get: function (req, res) {
       console.log('This is a GET request');
-      models.messages.get(function(rows) {
-        var body = {result: {}};
-        // res.json(rows);
-        console.log(rows[0].text);
-        body.result.text = rows[0].text;
-        console.log(body);
-        // res.set(header, defaultCorsHeaders);
-        res.send(body);
+      models.messages.get(function(data) {
+        res.send(data);
       });
     }, // a function which handles a get request for all messages
     post: function (req, res) {
+      models.messages.post(req.body, function() {
+        res.send();
+      });
 
     } // a function which handles posting a message to the database
   },

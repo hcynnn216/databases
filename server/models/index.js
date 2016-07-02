@@ -3,12 +3,14 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (cb) {
-      db.retrieveMessages(function(rows) {
-        cb(rows);
+      db.retrieveMessages(function(data) {
+        cb(data);
       });
     }, // a function which produces all the messages
-    post: function (data) {
-      db.insertMessages(data);//once written call db.insertMessages
+    post: function (data, cb) {
+      db.insertMessages(data, function() {
+        cb();
+      });//once written call db.insertMessages
     } // a function which can be used to insert a message into the database
   },
 

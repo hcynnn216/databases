@@ -38,25 +38,37 @@ exports.retrieveMessages = function(cb) {
     if (err) {
       console.log('Failed to retrieve messages. Error: ', err);
     } else {
-      console.log('Data recieved from DB: \n');
-      console.log(rows);
-      var body = {result: {}};
-      // res.json(rows);
-      console.log(rows[0].text);
+      console.log('Data recieved from DB');
+      var data = {results: []};
+      console.log('length: ', rows.length);
 
-      body.result.text = rows[0].text;
-      console.log(body);
-      cb(rows);
+      for (var i = 0; i < rows.length; i++) {
+        var message = {};
+        // res.json(rows);
 
+        message.text = rows[i].text;
+        // seperate queries for roomname and username from user_id and room_id?
+        message.username = '' + rows[i].user_id;
+        message.roomname = '' + rows[i].room_id;
+        data.results.push(message);
+      }
+      cb(JSON.stringify(data));
     }
   });
 
 };
 
-exports.insertMessages = function(message) {
-  
-  var insertMessage = {id: 1, text: 'hello world', 'user_id': 1, 'room_id': 1};
-  connection.query('INSERT INTO messages SET ?', insertMessage, function(err, res) { });
+exports.insertMessages = function(message, cb) {
+  console.log (message);
+  console.log (message.username);
+  console.log (message.roomname);
+  var newMessage = { text: message.text, 'user_id': 1, 'room_id': 1};
+  connection.query('INSERT INTO messages SET?', newMessage, function(err, res) {
+    if (err) {
+      console.log('Error inserting to db');
+    }
+    cb();
+  });
 
 };
 // connection.end(function(err) {
